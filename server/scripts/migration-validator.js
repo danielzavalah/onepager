@@ -9,7 +9,7 @@ class MigrationValidator {
         this.ensureBackupDir();
     }
 
-    ensureBackupDir() {
+ensureBackupDir() {
         if (!fs.existsSync(this.backupDir)) {
             fs.mkdirSync(this.backupDir, { recursive: true });
         }
@@ -29,8 +29,14 @@ class MigrationValidator {
 
         const warnings = [];
         dangerousOperations.forEach(operation => {
-            if (new RegExp(operation, 'i').test(migrationContent)) {
-                warnings.push(`⚠️  DANGEROUS OPERATION DETECTED: ${operation}`);
+            if (operation === 'ALTER TABLE.*DROP') {
+                if (/ALTER TABLE.*DROP/i.test(migrationContent)) {
+                    warnings.push(`⚠️  DANGEROUS OPERATION DETECTED: ${operation}`);
+                }
+            } else {
+                if (migrationContent.toUpperCase().includes(operation)) {
+                    warnings.push(`⚠️  DANGEROUS OPERATION DETECTED: ${operation}`);
+                }
             }
         });
 
