@@ -1,6 +1,7 @@
 const tracer = require('dd-trace').init({
   logInjection: true,
   appsec: true,
+  iast: true,
   profiling: true,
   service: 'webstore', // <-- IMPORTANT: Use a consistent service name
   env: process.env.NODE_ENV || 'dev',
